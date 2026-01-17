@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Umkehrcode</title>
+    <style>
+        :root {
+            --primary-color: #AF52DE; /* iPad Lila für Unterscheidung */
+            --bg-color: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --text-color: #000000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .description {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: #e5e5ea;
+            border-radius: 12px;
+            padding: 4px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 1.2em;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 9px;
+            font-weight: bold;
+            color: #888;
+        }
+
+        .nav-btn.active {
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page-section {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1.3em;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        button.action-btn {
+            width: 100%;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f0ff;
+            border: 2px dashed var(--primary-color);
+            border-radius: 12px;
+            font-size: 1.5em;
+            font-family: monospace;
+            word-break: break-all;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🔄 Umkehrcode: Wort-Spiegel</h1>
+    <p class="description">Verwirre deine Gegner, indem du jedes Wort einfach rückwärts schreibst!</p>
+
+    <div class="nav-container">
+        <button class="nav-btn active" onclick="showPage('encrypt')">🔒 Verschlüsseln</button>
+        <button class="nav-btn" onclick="showPage('decrypt')">🔓 Entschlüsseln</button>
+    </div>
+
+    <div id="encrypt-page" class="page-section active">
+        <h2 style="margin-top:0;">Worte umdrehen</h2>
+        <label for="text-input">Deine Nachricht:</label>
+        <textarea id="text-input" rows="3" placeholder="z.B. GEHEIMER HUND"></textarea>
+        <button class="action-btn" onclick="reverseWords('encrypt')">Umkehren!</button>
+        <div id="encrypt-result" class="result-box"></div>
+    </div>
+
+    <div id="decrypt-page" class="page-section">
+        <h2 style="margin-top:0;">Code lesen</h2>
+        <label for="code-input">Der Geheimcode:</label>
+        <textarea id="code-input" rows="3" placeholder="z.B. REMIEHEG DNUH"></textarea>
+        <button class="action-btn" style="background-color: #34c759;" onclick="reverseWords('decrypt')">Zurückdrehen!</button>
+        <div id="decrypt-result" class="result-box" style="border-color:#34c759; background-color:#e8fceb;"></div>
+    </div>
+
+    <script>
+        function showPage(mode) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+            if (mode === 'encrypt') {
+                document.getElementById('encrypt-page').classList.add('active');
+                document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
+            } else {
+                document.getElementById('decrypt-page').classList.add('active');
+                document.querySelector('.nav-btn:nth-child(2)').classList.add('active');
+            }
+        }
+
+        function reverseWords(mode) {
+            let inputId = (mode === 'encrypt') ? 'text-input' : 'code-input';
+            let resultId = (mode === 'encrypt') ? 'encrypt-result' : 'decrypt-result';
+            
+            let text = document.getElementById(inputId).value;
+            let resultElement = document.getElementById(resultId);
+
+            if (!text.trim()) {
+                alert("Bitte gib zuerst einen Text ein!");
+                return;
+            }
+
+            // Logik: Text in Worte teilen, jedes Wort umdrehen, wieder zusammenfügen
+            let words = text.split(' ');
+            let reversedWords = words.map(word => {
+                return word.split('').reverse().join('');
+            });
+
+            let finalResult = reversedWords.join(' ');
+
+            resultElement.innerText = finalResult;
+            resultElement.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

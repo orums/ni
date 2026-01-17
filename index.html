@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Abenteuer-Code-Zentrale</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%, #fbc2eb 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #2c3e50;
+            --accent-color: #ff4757;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        .container { 
+            width: 100%; 
+            max-width: 650px; 
+            background: var(--card-bg); 
+            padding: 40px; 
+            border-radius: 30px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
+            border: 5px solid white;
+        }
+        .header-icons { font-size: 3em; margin-bottom: 10px; }
+        h1 { color: #333; text-align: center; font-size: 2.2em; margin-top: 0; }
+        ol { padding: 0; list-style: none; }
+        li { 
+            background: white;
+            margin-bottom: 15px; 
+            padding: 15px 25px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            border: 2px solid #ffeaa7;
+            transition: transform 0.2s ease;
+        }
+        li:hover { transform: scale(1.03); border-color: var(--accent-color); }
+        .emoji { font-size: 1.8em; margin-right: 20px; }
+        a { 
+            text-decoration: none; 
+            color: var(--text-color); 
+            font-weight: bold; 
+            font-size: 1.2em;
+            flex-grow: 1;
+        }
+        .footer { text-align: center; margin-top: 20px; font-weight: bold; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="header-icons">🐎 🐉 🚀</div>
+    <div class="container">
+        <h1>📜 Abenteuer-Zentrale</h1>
+        <ol>
+            <li><span class="emoji">🚀</span><a href="Schatzsuche/GeburiCode.html">🕵️‍♂️ Geburtstagscode: Ver- und Entschlüssel</a></li><li><span class="emoji">🐉</span><a href="Schatzsuche/Umkehrcode.html">🔄 Umkehrcode: Wort-Spiegel</a></li>
+        </ol>
+    </div>
+    <div class="footer">Bereit für die nächste Mission? ✨</div>
+</body>
+</html>
