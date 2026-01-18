@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Geburtstagscode</title>
+    <title>Geburtstagscode 1.0</title>
     <style>
         /* Design für gute Lesbarkeit auf dem iPad */
         :root {
@@ -130,21 +130,48 @@
         }
 
         /* Ergebnis Box */
-        .result-box {
+        .result-container {
+            position: relative;
             margin-top: 30px;
+            display: none;
+        }
+
+        .result-box {
             padding: 20px;
+            padding-right: 50px;
             background-color: #eef7ff;
             border: 2px dashed var(--primary-color);
             border-radius: 12px;
             font-size: 1.5em;
             font-family: monospace;
             word-break: break-all;
-            display: none; /* Erst anzeigen wenn Ergebnis da ist */
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+            background: #0056b3;
+        }
+
+        .copy-btn.copied {
+            background: #34c759;
         }
 
         .back-btn {
@@ -162,6 +189,11 @@
         .back-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
     </style>
@@ -182,15 +214,18 @@
         <h2 style="margin-top:0;">Nachricht tarnen</h2>
         
         <label for="text-input">Deine geheime Nachricht:</label>
-        <textarea id="text-input" rows="3" placeholder="z.B. HUND" oninput="autoFormatEncrypt(this)"></textarea>
+        <textarea id="text-input" rows="3" placeholder="z.B. HUND" oninput="filterInput(this)"></textarea>
 
         <label for="key-input">Dein Schlüssel (Geburtstag):</label>
-        <input type="text" id="key-input" placeholder="z.B. 12.03." inputmode="numeric">
+        <input type="text" id="key-input" placeholder="z.B. 12.03." inputmode="numeric" oninput="filterKeyInput(this)">
         <p style="font-size:0.9em; color:#888; text-align:left; margin-top:5px;">Tipp: Gib z.B. "1203" für den 12. März ein.</p>
 
         <button class="action-btn" onclick="processText('encrypt')">Verschlüsseln!</button>
 
-        <div id="encrypt-result" class="result-box"></div>
+        <div id="encrypt-container" class="result-container">
+            <div id="encrypt-result" class="result-box"></div>
+            <button class="copy-btn" onclick="copyResult('encrypt-result', this)" title="Kopieren">📋</button>
+        </div>
     </div>
 
     <!-- SEITE 2: ENTSCHLÜSSELN -->
@@ -198,14 +233,17 @@
         <h2 style="margin-top:0;">Code knacken</h2>
         
         <label for="code-input">Der Geheimcode:</label>
-        <textarea id="code-input" rows="3" placeholder="Gib den Code hier ein..." oninput="autoFormatDecrypt(this)"></textarea>
+        <textarea id="code-input" rows="3" placeholder="Gib den Code hier ein..." oninput="filterInput(this)"></textarea>
 
         <label for="key-decrypt">Der Schlüssel (Geburtstag):</label>
-        <input type="text" id="key-decrypt" placeholder="z.B. 12.03." inputmode="numeric">
+        <input type="text" id="key-decrypt" placeholder="z.B. 12.03." inputmode="numeric" oninput="filterKeyInput(this)">
 
         <button class="action-btn" style="background-color: #34c759;" onclick="processText('decrypt')">Entschlüsseln!</button>
 
-        <div id="decrypt-result" class="result-box" style="border-color:#34c759; background-color:#e8fceb;"></div>
+        <div id="decrypt-container" class="result-container">
+            <div id="decrypt-result" class="result-box" style="border-color:#34c759; background-color:#e8fceb;"></div>
+            <button class="copy-btn" style="background:#34c759;" onclick="copyResult('decrypt-result', this)" title="Kopieren">📋</button>
+        </div>
     </div>
 
     <script>
@@ -213,82 +251,25 @@
 
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        // Erlaubte Satzzeichen
-        const allowedPunctuation = " .,!?-:;'\"()";
-
-        // Umwandlung von Umlauten und Akzentbuchstaben für Verschlüsselung
-        function cleanTextForEncrypt(text) {
-            let result = text.toUpperCase();
-            // Umlaute zu Doppelbuchstaben
-            result = result
-                .replace(/Ä/g, "AE")
-                .replace(/Ö/g, "OE")
-                .replace(/Ü/g, "UE")
-                .replace(/ß/g, "SS")
-                .replace(/ẞ/g, "SS");
-            // Akzentbuchstaben zu Grundbuchstaben
-            result = result
-                .replace(/[ÀÁÂÃÅÆ]/g, "A")
-                .replace(/[Ç]/g, "C")
-                .replace(/[ÈÉÊË]/g, "E")
-                .replace(/[ÌÍÎÏ]/g, "I")
-                .replace(/[Ñ]/g, "N")
-                .replace(/[ÒÓÔÕØ]/g, "O")
-                .replace(/[ÙÚÛÜ]/g, "U")
-                .replace(/[Ý]/g, "Y");
-            // Nur erlaubte Zeichen behalten (A-Z und Satzzeichen)
-            let filtered = "";
-            for (let char of result) {
-                if (alphabet.includes(char) || allowedPunctuation.includes(char)) {
-                    filtered += char;
-                }
-            }
-            return filtered;
+        // Eingabefilter: Nur Grossbuchstaben, Leerzeichen und Zeilenumbrüche erlaubt
+        function filterInput(el) {
+            const pos = el.selectionStart;
+            const original = el.value;
+            // In Grossbuchstaben umwandeln, nur A-Z, Leerzeichen und Newlines behalten
+            el.value = original.toUpperCase().replace(/[^A-ZÄÖÜ \n]/g, '');
+            // Cursor-Position anpassen falls Zeichen entfernt wurden
+            const diff = original.length - el.value.length;
+            el.setSelectionRange(pos - diff, pos - diff);
         }
 
-        // Für Entschlüsselung: nur Großbuchstaben und Satzzeichen
-        function cleanTextForDecrypt(text) {
-            let result = text.toUpperCase();
-            let filtered = "";
-            for (let char of result) {
-                if (alphabet.includes(char) || allowedPunctuation.includes(char)) {
-                    filtered += char;
-                }
-            }
-            return filtered;
-        }
-
-        // Zählt wie viele Extra-Zeichen durch Umlaut-Ersetzung entstehen
-        function countExpansion(text, upToIndex) {
-            let expansion = 0;
-            const upper = text.toUpperCase();
-            for (let i = 0; i < upToIndex && i < text.length; i++) {
-                const char = upper[i];
-                if (char === 'Ä' || char === 'Ö' || char === 'Ü' || char === 'ß' || char === 'ẞ') {
-                    expansion += 1; // Diese werden zu 2 Zeichen
-                }
-            }
-            return expansion;
-        }
-
-        // Automatische Formatierung für Verschlüsselung (mit Umlaut-Expansion)
-        function autoFormatEncrypt(element) {
-            const start = element.selectionStart;
-            const oldValue = element.value;
-            const expansion = countExpansion(oldValue, start);
-            element.value = cleanTextForEncrypt(oldValue);
-            const newPos = Math.min(start + expansion, element.value.length);
-            element.setSelectionRange(newPos, newPos);
-        }
-
-        // Automatische Formatierung für Entschlüsselung (nur uppercase + Satzzeichen)
-        function autoFormatDecrypt(element) {
-            const start = element.selectionStart;
-            const oldLen = element.value.length;
-            element.value = cleanTextForDecrypt(element.value);
-            const newLen = element.value.length;
-            const newPos = Math.max(0, start - (oldLen - newLen));
-            element.setSelectionRange(newPos, newPos);
+        // Schlüsselfeld-Filter: Nur Zahlen und Satzzeichen erlaubt
+        function filterKeyInput(el) {
+            const pos = el.selectionStart;
+            const original = el.value;
+            // Nur Zahlen und typische Satzzeichen für Datumsformat erlaubt (. - /)
+            el.value = original.replace(/[^0-9.\-\/]/g, '');
+            const diff = original.length - el.value.length;
+            el.setSelectionRange(pos - diff, pos - diff);
         }
 
         function showPage(mode) {
@@ -306,48 +287,26 @@
         }
 
         function processText(mode) {
-            let text, keyRaw, resultElement, keyInput;
+            let text, keyRaw, resultElement;
 
             // Eingaben holen je nach Modus
             if (mode === 'encrypt') {
-                text = cleanTextForEncrypt(document.getElementById('text-input').value);
-                keyInput = document.getElementById('key-input');
-                keyRaw = keyInput.value;
+                text = document.getElementById('text-input').value.toUpperCase();
+                keyRaw = document.getElementById('key-input').value;
                 resultElement = document.getElementById('encrypt-result');
             } else {
-                text = cleanTextForDecrypt(document.getElementById('code-input').value);
-                keyInput = document.getElementById('key-decrypt');
-                keyRaw = keyInput.value;
+                text = document.getElementById('code-input').value.toUpperCase();
+                keyRaw = document.getElementById('key-decrypt').value;
                 resultElement = document.getElementById('decrypt-result');
             }
 
-            // Validierung: Text nicht leer
-            if (!text || text.trim().length === 0) {
-                alert("Bitte gib einen Text ein!");
-                return;
-            }
-
             // Schlüssel bereinigen: Nur Zahlen behalten (z.B. aus "12.03." wird "1203")
-            let keyClean = keyRaw.replace(/[^0-9]/g, '');
-            // Eingabefeld aktualisieren (nur Ziffern anzeigen)
-            keyInput.value = keyClean;
-            let keyDigits = keyClean.split('').map(Number);
+            // Siehe Quelle: "Rechenanweisung... 1-2-0-3"
+            let keyDigits = keyRaw.replace(/[^0-9]/g, '').split('').map(Number);
 
-            // Validierung: Schlüssel ist nicht leer und gültig
             if (keyDigits.length === 0) {
                 alert("Bitte gib ein gültiges Datum oder Zahlen als Schlüssel ein!");
                 return;
-            }
-
-            // Validierung: Schlüssel hat reasonable Länge (max 31 Tage)
-            if (keyDigits.some(digit => digit > 9)) {
-                alert("Der Schlüssel darf nur Ziffern 0-9 enthalten!");
-                return;
-            }
-
-            // Warnung bei leinem Schlüssel
-            if (keyDigits.length > 8) {
-                console.warn("Warnung: Schlüssel ist ungewöhnlich lang");
             }
 
             let result = "";
@@ -382,9 +341,49 @@
                 }
             }
 
-            // Ergebnis anzeigen (textContent statt innerText für Sicherheit)
-            resultElement.textContent = result;
-            resultElement.style.display = 'block';
+            // Ergebnis anzeigen
+            resultElement.innerText = result;
+            resultElement.parentElement.style.display = 'block';
+        }
+
+        function copyResult(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopied(btn);
+                }).catch(() => {
+                    fallbackCopy(text, btn);
+                });
+            } else {
+                fallbackCopy(text, btn);
+            }
+        }
+
+        function fallbackCopy(text, btn) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showCopied(btn);
+            } catch (e) {
+                alert('Kopieren fehlgeschlagen');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showCopied(btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '✓';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.classList.remove('copied');
+            }, 1500);
         }
     </script>
 

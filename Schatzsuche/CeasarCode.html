@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Caesar-Code Zentrale</title>
+    <title>Caesar-Code Zentrale 1.0</title>
     <style>
         :root {
             --primary-color: #E63946; /* Römisches Rot */
@@ -203,12 +203,12 @@
     <p class="description">Verschiebe das Alphabet wie der große Feldherr Julius Caesar, um deine Befehle geheim zu halten!</p>
 
     <div class="nav-container">
-        <button class="nav-btn active" onclick="showPage('encrypt')">🔒 Tarnen</button>
-        <button class="nav-btn" onclick="showPage('decrypt')">🔓 Lesen</button>
+        <button class="nav-btn active" onclick="showPage('encrypt')">🔒 Verschlüsseln</button>
+        <button class="nav-btn" onclick="showPage('decrypt')">🔓 Entschlüsseln</button>
     </div>
 
     <div id="encrypt-page" class="page-section active">
-        <h2 style="margin-top:0;">Befehl verschlüsseln</h2>
+        <h2 style="margin-top:0;">Botschaft verschlüsseln</h2>
         
         <label for="text-input">Deine Nachricht (Klartext):</label>
         <textarea id="text-input" rows="3" placeholder="Z.B. ANGRIFF BEI RÜCKZUG" oninput="autoFormatEncrypt(this)"></textarea>

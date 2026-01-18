@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Umkehrcode</title>
+    <title>Umkehrcode 1.0</title>
     <style>
         :root {
             --primary-color: #AF52DE; /* iPad Lila für Unterscheidung */
@@ -113,21 +113,47 @@
             font-weight: bold;
         }
 
-        .result-box {
+        .result-container {
+            position: relative;
             margin-top: 30px;
+            display: none;
+        }
+
+        .result-box {
             padding: 20px;
+            padding-right: 50px;
             background-color: #f8f0ff;
             border: 2px dashed var(--primary-color);
             border-radius: 12px;
             font-size: 1.5em;
             font-family: monospace;
             word-break: break-all;
-            display: none;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .copy-btn.copied {
+            background: #34c759;
         }
 
         .back-btn {
@@ -146,6 +172,11 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -161,100 +192,26 @@
     <div id="encrypt-page" class="page-section active">
         <h2 style="margin-top:0;">Worte umdrehen</h2>
         <label for="text-input">Deine Nachricht:</label>
-        <textarea id="text-input" rows="3" placeholder="z.B. GEHEIMER HUND" oninput="autoFormatEncrypt(this)"></textarea>
+        <textarea id="text-input" rows="3" placeholder="z.B. GEHEIMER HUND"></textarea>
         <button class="action-btn" onclick="reverseWords('encrypt')">Umkehren!</button>
-        <div id="encrypt-result" class="result-box"></div>
+        <div id="encrypt-container" class="result-container">
+            <div id="encrypt-result" class="result-box"></div>
+            <button class="copy-btn" onclick="copyResult('encrypt-result', this)" title="Kopieren">📋</button>
+        </div>
     </div>
 
     <div id="decrypt-page" class="page-section">
         <h2 style="margin-top:0;">Code lesen</h2>
         <label for="code-input">Der Geheimcode:</label>
-        <textarea id="code-input" rows="3" placeholder="z.B. REMIEHEG DNUH" oninput="autoFormatDecrypt(this)"></textarea>
+        <textarea id="code-input" rows="3" placeholder="z.B. REMIEHEG DNUH"></textarea>
         <button class="action-btn" style="background-color: #34c759;" onclick="reverseWords('decrypt')">Zurückdrehen!</button>
-        <div id="decrypt-result" class="result-box" style="border-color:#34c759; background-color:#e8fceb;"></div>
+        <div id="decrypt-container" class="result-container">
+            <div id="decrypt-result" class="result-box" style="border-color:#34c759; background-color:#e8fceb;"></div>
+            <button class="copy-btn" style="background:#34c759;" onclick="copyResult('decrypt-result', this)" title="Kopieren">📋</button>
+        </div>
     </div>
 
     <script>
-        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-        // Erlaubte Satzzeichen
-        const allowedPunctuation = " .,!?-:;'\"()";
-
-        // Umwandlung von Umlauten und Akzentbuchstaben für Verschlüsselung
-        function cleanTextForEncrypt(text) {
-            let result = text.toUpperCase();
-            // Umlaute zu Doppelbuchstaben
-            result = result
-                .replace(/Ä/g, "AE")
-                .replace(/Ö/g, "OE")
-                .replace(/Ü/g, "UE")
-                .replace(/ß/g, "SS")
-                .replace(/ẞ/g, "SS");
-            // Akzentbuchstaben zu Grundbuchstaben
-            result = result
-                .replace(/[ÀÁÂÃÅÆ]/g, "A")
-                .replace(/[Ç]/g, "C")
-                .replace(/[ÈÉÊË]/g, "E")
-                .replace(/[ÌÍÎÏ]/g, "I")
-                .replace(/[Ñ]/g, "N")
-                .replace(/[ÒÓÔÕØ]/g, "O")
-                .replace(/[ÙÚÛÜ]/g, "U")
-                .replace(/[Ý]/g, "Y");
-            // Nur erlaubte Zeichen behalten (A-Z und Satzzeichen)
-            let filtered = "";
-            for (let char of result) {
-                if (alphabet.includes(char) || allowedPunctuation.includes(char)) {
-                    filtered += char;
-                }
-            }
-            return filtered;
-        }
-
-        // Für Entschlüsselung: nur Großbuchstaben und Satzzeichen
-        function cleanTextForDecrypt(text) {
-            let result = text.toUpperCase();
-            let filtered = "";
-            for (let char of result) {
-                if (alphabet.includes(char) || allowedPunctuation.includes(char)) {
-                    filtered += char;
-                }
-            }
-            return filtered;
-        }
-
-        // Zählt wie viele Extra-Zeichen durch Umlaut-Ersetzung entstehen
-        function countExpansion(text, upToIndex) {
-            let expansion = 0;
-            const upper = text.toUpperCase();
-            for (let i = 0; i < upToIndex && i < text.length; i++) {
-                const char = upper[i];
-                if (char === 'Ä' || char === 'Ö' || char === 'Ü' || char === 'ß' || char === 'ẞ') {
-                    expansion += 1; // Diese werden zu 2 Zeichen
-                }
-            }
-            return expansion;
-        }
-
-        // Automatische Formatierung für Verschlüsselung (mit Umlaut-Expansion)
-        function autoFormatEncrypt(element) {
-            const start = element.selectionStart;
-            const oldValue = element.value;
-            const expansion = countExpansion(oldValue, start);
-            element.value = cleanTextForEncrypt(oldValue);
-            const newPos = Math.min(start + expansion, element.value.length);
-            element.setSelectionRange(newPos, newPos);
-        }
-
-        // Automatische Formatierung für Entschlüsselung (nur uppercase + Satzzeichen)
-        function autoFormatDecrypt(element) {
-            const start = element.selectionStart;
-            const oldLen = element.value.length;
-            element.value = cleanTextForDecrypt(element.value);
-            const newLen = element.value.length;
-            const newPos = Math.max(0, start - (oldLen - newLen));
-            element.setSelectionRange(newPos, newPos);
-        }
-
         function showPage(mode) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
@@ -271,42 +228,65 @@
         function reverseWords(mode) {
             let inputId = (mode === 'encrypt') ? 'text-input' : 'code-input';
             let resultId = (mode === 'encrypt') ? 'encrypt-result' : 'decrypt-result';
-
-            let rawText = document.getElementById(inputId).value;
+            
+            let text = document.getElementById(inputId).value;
             let resultElement = document.getElementById(resultId);
 
-            // Text bereinigen je nach Modus
-            let text = (mode === 'encrypt')
-                ? cleanTextForEncrypt(rawText)
-                : cleanTextForDecrypt(rawText);
-
-            // Validierung: Text nicht leer
-            if (!text || !text.trim()) {
+            if (!text.trim()) {
                 alert("Bitte gib zuerst einen Text ein!");
-                return;
-            }
-
-            // Validierung: Vernünftige Textlänge (max 10000 Zeichen)
-            if (text.length > 10000) {
-                alert("Der Text ist zu lang (max. 10.000 Zeichen)!");
                 return;
             }
 
             // Logik: Text in Worte teilen, jedes Wort umdrehen, wieder zusammenfügen
             let words = text.split(' ');
             let reversedWords = words.map(word => {
-                // Prüfe auf leere Worte (mehrere Leerzeichen hintereinander)
-                if (!word || word.trim().length === 0) {
-                    return '';
-                }
                 return word.split('').reverse().join('');
             });
 
             let finalResult = reversedWords.join(' ');
 
-            // Sicherheit: Ausgabe vor XSS schützen (textContent statt innerHTML)
-            resultElement.textContent = finalResult;
-            resultElement.style.display = 'block';
+            resultElement.innerText = finalResult;
+            resultElement.parentElement.style.display = 'block';
+        }
+
+        function copyResult(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopied(btn);
+                }).catch(() => {
+                    fallbackCopy(text, btn);
+                });
+            } else {
+                fallbackCopy(text, btn);
+            }
+        }
+
+        function fallbackCopy(text, btn) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showCopied(btn);
+            } catch (e) {
+                alert('Kopieren fehlgeschlagen');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showCopied(btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '✓';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.classList.remove('copied');
+            }, 1500);
         }
     </script>
 
