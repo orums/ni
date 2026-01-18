@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Geburtstagscode</title>
+    <title>Caesar-Code Zentrale</title>
     <style>
-        /* Design für gute Lesbarkeit auf dem iPad */
         :root {
-            --primary-color: #007AFF; /* iPad Blau */
-            --bg-color: #F2F2F7;
+            --primary-color: #E63946; /* Römisches Rot */
+            --bg-color: #F1FAEE;
             --card-bg: #FFFFFF;
-            --text-color: #000000;
+            --text-color: #1D3557;
+            --gold: #D4AF37;
         }
 
         body {
@@ -22,27 +22,33 @@
             text-align: center;
         }
 
+        .header-decoration {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            color: #333;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .description {
             font-size: 1.2em;
-            color: #666;
+            color: #457B9D;
             margin-bottom: 30px;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        /* Navigation zwischen den "Seiten" */
         .nav-container {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
-            background: #e5e5ea;
+            background: #A8DADC;
             border-radius: 12px;
             padding: 4px;
             max-width: 600px;
@@ -59,7 +65,7 @@
             cursor: pointer;
             border-radius: 9px;
             font-weight: bold;
-            color: #888;
+            color: #457B9D;
         }
 
         .nav-btn.active {
@@ -68,23 +74,22 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Container für die Formulare */
         .page-section {
-            display: none; /* Standardmäßig ausgeblendet */
+            display: none;
             background-color: var(--card-bg);
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             max-width: 600px;
             margin: 0 auto;
+            border-top: 8px solid var(--gold);
         }
 
         .page-section.active {
-            display: block; /* Nur die aktive Seite anzeigen */
+            display: block;
             animation: fadeIn 0.3s ease-in-out;
         }
 
-        /* Eingabefelder groß genug für Finger */
         label {
             display: block;
             text-align: left;
@@ -100,16 +105,10 @@
             border: 2px solid #ddd;
             border-radius: 12px;
             font-size: 1.3em;
-            box-sizing: border-box; /* Wichtig für Padding */
-            font-family: monospace; /* Damit Zeichen untereinander stehen */
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        input:focus, textarea:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
-
-        /* Der Aktions-Button */
         button.action-btn {
             width: 100%;
             padding: 20px;
@@ -121,25 +120,26 @@
             border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
+            box-shadow: 0 4px #9b2226;
         }
 
         button.action-btn:active {
-            transform: scale(0.98);
-            background-color: #0056b3;
+            transform: translateY(4px);
+            box-shadow: 0 0 #9b2226;
         }
 
-        /* Ergebnis Box */
         .result-box {
             margin-top: 30px;
             padding: 20px;
-            background-color: #eef7ff;
-            border: 2px dashed var(--primary-color);
+            background-color: #F1FAEE;
+            border: 3px double var(--gold);
             border-radius: 12px;
-            font-size: 1.5em;
-            font-family: monospace;
+            font-size: 1.6em;
+            font-family: 'Courier New', Courier, monospace;
             word-break: break-all;
-            display: none; /* Erst anzeigen wenn Ergebnis da ist */
+            display: none;
+            color: var(--primary-color);
+            font-weight: bold;
         }
 
         @keyframes fadeIn {
@@ -163,54 +163,49 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
-
     </style>
 </head>
 <body>
 
-    <h1>🕵️‍♂️ Geburtstagscode: Ver- und Entschlüssel</h1>
-    <p class="description">Nutze deinen Geburtstag als geheimen Schlüssel, um Nachrichten zu schreiben oder zu lesen.</p>
+    <div class="header-decoration">🏛️📜🛡️</div>
+    <h1>Caesar-Code Zentrale</h1>
+    <p class="description">Verschiebe das Alphabet wie der große Feldherr Julius Caesar, um deine Befehle geheim zu halten!</p>
 
-    <!-- Navigation -->
     <div class="nav-container">
-        <button class="nav-btn active" onclick="showPage('encrypt')">🔒 Verschlüsseln</button>
-        <button class="nav-btn" onclick="showPage('decrypt')">🔓 Entschlüsseln</button>
+        <button class="nav-btn active" onclick="showPage('encrypt')">🔒 Tarnen</button>
+        <button class="nav-btn" onclick="showPage('decrypt')">🔓 Lesen</button>
     </div>
 
-    <!-- SEITE 1: VERSCHLÜSSELN -->
     <div id="encrypt-page" class="page-section active">
-        <h2 style="margin-top:0;">Nachricht tarnen</h2>
+        <h2 style="margin-top:0;">Befehl verschlüsseln</h2>
         
-        <label for="text-input">Deine geheime Nachricht:</label>
-        <textarea id="text-input" rows="3" placeholder="z.B. HUND" oninput="autoFormatEncrypt(this)"></textarea>
+        <label for="text-input">Deine Nachricht (Klartext):</label>
+        <textarea id="text-input" rows="3" placeholder="Z.B. ANGRIFF BEI RÜCKZUG" oninput="autoFormatEncrypt(this)"></textarea>
 
-        <label for="key-input">Dein Schlüssel (Geburtstag):</label>
-        <input type="text" id="key-input" placeholder="z.B. 12.03." inputmode="numeric">
-        <p style="font-size:0.9em; color:#888; text-align:left; margin-top:5px;">Tipp: Gib z.B. "1203" für den 12. März ein.</p>
+        <label for="key-input">Der geheime Schlüssel (Zahl):</label>
+        <input type="number" id="key-input" value="3" min="1" max="25">
+        <p style="font-size:0.9em; color:#666; text-align:left; margin-top:5px;">Tipp: Umlaute wie Ä, Ö, Ü werden automatisch zu AE, OE, UE.</p>
 
-        <button class="action-btn" onclick="processText('encrypt')">Verschlüsseln!</button>
+        <button class="action-btn" onclick="processCaesar('encrypt')">In Geheimschrift umwandeln!</button>
 
         <div id="encrypt-result" class="result-box"></div>
     </div>
 
-    <!-- SEITE 2: ENTSCHLÜSSELN -->
     <div id="decrypt-page" class="page-section">
-        <h2 style="margin-top:0;">Code knacken</h2>
+        <h2 style="margin-top:0;">Code der Feinde knacken</h2>
         
-        <label for="code-input">Der Geheimcode:</label>
-        <textarea id="code-input" rows="3" placeholder="Gib den Code hier ein..." oninput="autoFormatDecrypt(this)"></textarea>
+        <label for="code-input">Geheime Botschaft:</label>
+        <textarea id="code-input" rows="3" placeholder="Z.B. DQJULII..." oninput="autoFormatDecrypt(this)"></textarea>
 
-        <label for="key-decrypt">Der Schlüssel (Geburtstag):</label>
-        <input type="text" id="key-decrypt" placeholder="z.B. 12.03." inputmode="numeric">
+        <label for="key-decrypt">Der geheime Schlüssel (Zahl):</label>
+        <input type="number" id="key-decrypt" value="3" min="1" max="25">
 
-        <button class="action-btn" style="background-color: #34c759;" onclick="processText('decrypt')">Entschlüsseln!</button>
+        <button class="action-btn" style="background-color: #457B9D; box-shadow: 0 4px #1D3557;" onclick="processCaesar('decrypt')">Botschaft entschlüsseln!</button>
 
-        <div id="decrypt-result" class="result-box" style="border-color:#34c759; background-color:#e8fceb;"></div>
+        <div id="decrypt-result" class="result-box" style="background-color:#F1FAEE; color:#1D3557;"></div>
     </div>
 
     <script>
-        // Logik basierend auf Quelle: Geburtsdatum-Code
-
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         // Erlaubte Satzzeichen
@@ -292,7 +287,6 @@
         }
 
         function showPage(mode) {
-            // Umschalten der Ansicht (Tabs)
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
 
@@ -305,19 +299,18 @@
             }
         }
 
-        function processText(mode) {
-            let text, keyRaw, resultElement, keyInput;
+        function processCaesar(mode) {
+            let text, shift, resultElement;
 
-            // Eingaben holen je nach Modus
             if (mode === 'encrypt') {
+                // Text bereinigen (Umlaute umwandeln)
                 text = cleanTextForEncrypt(document.getElementById('text-input').value);
-                keyInput = document.getElementById('key-input');
-                keyRaw = keyInput.value;
+                shift = parseInt(document.getElementById('key-input').value);
                 resultElement = document.getElementById('encrypt-result');
             } else {
+                // Beim Entschlüsseln: nur Großbuchstaben und Satzzeichen
                 text = cleanTextForDecrypt(document.getElementById('code-input').value);
-                keyInput = document.getElementById('key-decrypt');
-                keyRaw = keyInput.value;
+                shift = parseInt(document.getElementById('key-decrypt').value);
                 resultElement = document.getElementById('decrypt-result');
             }
 
@@ -327,62 +320,42 @@
                 return;
             }
 
-            // Schlüssel bereinigen: Nur Zahlen behalten (z.B. aus "12.03." wird "1203")
-            let keyClean = keyRaw.replace(/[^0-9]/g, '');
-            // Eingabefeld aktualisieren (nur Ziffern anzeigen)
-            keyInput.value = keyClean;
-            let keyDigits = keyClean.split('').map(Number);
-
-            // Validierung: Schlüssel ist nicht leer und gültig
-            if (keyDigits.length === 0) {
-                alert("Bitte gib ein gültiges Datum oder Zahlen als Schlüssel ein!");
+            // Validierung: Shift ist eine Zahl
+            if (isNaN(shift)) {
+                alert("Bitte gib eine Zahl als Schlüssel ein!");
                 return;
             }
 
-            // Validierung: Schlüssel hat reasonable Länge (max 31 Tage)
-            if (keyDigits.some(digit => digit > 9)) {
-                alert("Der Schlüssel darf nur Ziffern 0-9 enthalten!");
+            // Validierung: Shift im validen Bereich (1-25)
+            if (shift < 1 || shift > 25) {
+                alert("Der Schlüssel muss zwischen 1 und 25 liegen!");
                 return;
             }
 
-            // Warnung bei leinem Schlüssel
-            if (keyDigits.length > 8) {
-                console.warn("Warnung: Schlüssel ist ungewöhnlich lang");
-            }
+            // Normalisierung: Shift modulo 26 für Sicherheit
+            shift = shift % 26;
 
             let result = "";
-            let keyIndex = 0;
 
             for (let i = 0; i < text.length; i++) {
                 let char = text[i];
                 let alphaIndex = alphabet.indexOf(char);
 
                 if (alphaIndex === -1) {
-                    // Zeichen ist kein Buchstabe (z.B. Leerzeichen), einfach übernehmen
-                    result += char;
+                    result += char; // Leerzeichen, Satzzeichen etc. behalten
                 } else {
-                    // Zahl für die aktuelle Verschiebung holen (Schlüssel wiederholt sich)
-                    let shift = keyDigits[keyIndex % keyDigits.length];
-                    
                     let newIndex;
                     if (mode === 'encrypt') {
-                        // Verschlüsseln: Addieren (+ shift)
-                        // Modulo 26 sorgt für den "Kreislauf" (Quelle)
+                        // Verschlüsseln: Alphabet nach rechts schieben
                         newIndex = (alphaIndex + shift) % 26;
                     } else {
-                        // Entschlüsseln: Subtrahieren (- shift)
-                        // +26 sorgt dafür, dass wir nicht im Negativen landen
+                        // Entschlüsseln: Alphabet nach links schieben (+26 gegen negative Zahlen)
                         newIndex = (alphaIndex - shift + 26) % 26;
                     }
-
                     result += alphabet[newIndex];
-                    
-                    // Zum nächsten Schlüssel-Zeichen springen
-                    keyIndex++;
                 }
             }
 
-            // Ergebnis anzeigen (textContent statt innerText für Sicherheit)
             resultElement.textContent = result;
             resultElement.style.display = 'block';
         }

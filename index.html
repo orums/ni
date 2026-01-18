@@ -6,62 +6,162 @@
     <title>🚀 Abenteuer-Code-Zentrale</title>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%, #fbc2eb 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.97);
             --text-color: #2c3e50;
-            --accent-color: #ff4757;
+            --accent: #667eea;
         }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient);
             background-attachment: fixed;
             min-height: 100vh;
             margin: 0;
-            padding: 40px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .container { 
-            width: 100%; 
-            max-width: 650px; 
-            background: var(--card-bg); 
-            padding: 40px; 
-            border-radius: 30px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
-            border: 5px solid white;
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative;
         }
-        .header-icons { font-size: 3em; margin-bottom: 10px; }
-        h1 { color: #333; text-align: center; font-size: 2.2em; margin-top: 0; }
-        ol { padding: 0; list-style: none; }
-        li { 
-            background: white;
-            margin-bottom: 15px; 
-            padding: 15px 25px;
+        .version-badge {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 14px;
             border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .header-icons {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            font-size: 2em;
+            margin: 0 0 30px 0;
+            font-weight: 700;
+        }
+        .item-count {
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+        }
+        ol {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        li {
+            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+            margin-bottom: 12px;
+            padding: 18px 20px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
-            border: 2px solid #ffeaa7;
-            transition: transform 0.2s ease;
+            border: 2px solid transparent;
+            transition: all 0.25s ease;
+            cursor: pointer;
         }
-        li:hover { transform: scale(1.03); border-color: var(--accent-color); }
-        .emoji { font-size: 1.8em; margin-right: 20px; }
-        a { 
-            text-decoration: none; 
-            color: var(--text-color); 
-            font-weight: bold; 
-            font-size: 1.2em;
+        li:hover {
+            transform: translateX(8px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+        li:active {
+            transform: translateX(8px) scale(0.98);
+        }
+        .emoji {
+            font-size: 2em;
+            margin-right: 18px;
+            flex-shrink: 0;
+        }
+        a {
+            text-decoration: none;
+            color: var(--text-color);
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
-        .footer { text-align: center; margin-top: 20px; font-weight: bold; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+        .title {
+            font-weight: 600;
+            font-size: 1.15em;
+            color: #333;
+        }
+        .description {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: 400;
+        }
+        .date {
+            font-size: 0.75em;
+            color: #999;
+            flex-shrink: 0;
+            margin-left: 15px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 500px) {
+            .container { padding: 25px 20px; }
+            li { padding: 15px; }
+            .emoji { font-size: 1.6em; margin-right: 12px; }
+            .title { font-size: 1em; }
+            .date { display: none; }
+        }
     </style>
 </head>
 <body>
     <div class="header-icons">🐎 🐉 🚀</div>
     <div class="container">
-        <h1>📜 Abenteuer-Zentrale</h1>
+        <div class="version-badge">v3.1</div>
+        <h1>📜 Abenteuer-Zentrale<br>für N 👩‍🦰 & I 👱‍♂️</h1>
+        <div class="item-count">3 Abenteuer warten auf dich!</div>
         <ol>
-            <li><span class="emoji">🚀</span><a href="Schatzsuche/GeburiCode.html">🕵️‍♂️ Geburtstagscode: Ver- und Entschlüssel</a></li><li><span class="emoji">🐉</span><a href="Schatzsuche/Umkehrcode.html">🔄 Umkehrcode: Wort-Spiegel</a></li>
+            <li>
+                <span class="emoji">🚀</span>
+                <a href="Schatzsuche/CeasarCode.html">
+                    <span class="title">Caesar-Code Zentrale</span>
+                    <span class="description">Verschiebe das Alphabet wie der große Feldherr Julius Caesar, um deine Befehle geheim zu halten!</span>
+                </a>
+                <span class="date">17.01.2026</span>
+            </li>
+            <li>
+                <span class="emoji">🐉</span>
+                <a href="Schatzsuche/Umkehrcode.html">
+                    <span class="title">🔄 Umkehrcode: Wort-Spiegel</span>
+                    <span class="description">Verwirre deine Gegner, indem du jedes Wort einfach rückwärts schreibst!</span>
+                </a>
+                <span class="date">17.01.2026</span>
+            </li>
+            <li>
+                <span class="emoji">🐎</span>
+                <a href="Schatzsuche/GeburiCode.html">
+                    <span class="title">🕵️‍♂️ Geburtstagscode: Ver- und Entschlüssel</span>
+                    <span class="description">Nutze deinen Geburtstag als geheimen Schlüssel, um Nachrichten zu schreiben oder zu lesen.</span>
+                </a>
+                <span class="date">17.01.2026</span>
+            </li>
         </ol>
     </div>
     <div class="footer">Bereit für die nächste Mission? ✨</div>

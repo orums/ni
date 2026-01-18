@@ -1,0 +1,34 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+ni.code**
+
+
+# Virtual environments and uv
+.venv
+.python-version
+*.toml
+*.lock
+# .gitignore
+.claude*
+README.md
+INPUT*.md
+**.md
+
+# exclude other files
+
+**.docx
+**.pdf
+**.txt
+**.xlsx
+**.py
+
+
+
+
+include html files
+!**.html
