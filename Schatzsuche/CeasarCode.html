@@ -128,18 +128,49 @@
             box-shadow: 0 0 #9b2226;
         }
 
-        .result-box {
+        .result-container {
+            position: relative;
             margin-top: 30px;
+            display: none;
+        }
+
+        .result-box {
             padding: 20px;
+            padding-right: 50px;
             background-color: #F1FAEE;
             border: 3px double var(--gold);
             border-radius: 12px;
             font-size: 1.6em;
             font-family: 'Courier New', Courier, monospace;
             word-break: break-all;
-            display: none;
             color: var(--primary-color);
             font-weight: bold;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .copy-btn.copied {
+            background: #34c759;
         }
 
         @keyframes fadeIn {
@@ -188,7 +219,10 @@
 
         <button class="action-btn" onclick="processCaesar('encrypt')">In Geheimschrift umwandeln!</button>
 
-        <div id="encrypt-result" class="result-box"></div>
+        <div id="encrypt-container" class="result-container">
+            <div id="encrypt-result" class="result-box"></div>
+            <button class="copy-btn" onclick="copyResult('encrypt-result', this)" title="Kopieren">📋</button>
+        </div>
     </div>
 
     <div id="decrypt-page" class="page-section">
@@ -202,7 +236,10 @@
 
         <button class="action-btn" style="background-color: #457B9D; box-shadow: 0 4px #1D3557;" onclick="processCaesar('decrypt')">Botschaft entschlüsseln!</button>
 
-        <div id="decrypt-result" class="result-box" style="background-color:#F1FAEE; color:#1D3557;"></div>
+        <div id="decrypt-container" class="result-container">
+            <div id="decrypt-result" class="result-box" style="background-color:#F1FAEE; color:#1D3557;"></div>
+            <button class="copy-btn" style="background:#457B9D;" onclick="copyResult('decrypt-result', this)" title="Kopieren">📋</button>
+        </div>
     </div>
 
     <script>
@@ -357,7 +394,47 @@
             }
 
             resultElement.textContent = result;
-            resultElement.style.display = 'block';
+            resultElement.parentElement.style.display = 'block';
+        }
+
+        function copyResult(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopied(btn);
+                }).catch(() => {
+                    fallbackCopy(text, btn);
+                });
+            } else {
+                fallbackCopy(text, btn);
+            }
+        }
+
+        function fallbackCopy(text, btn) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showCopied(btn);
+            } catch (e) {
+                alert('Kopieren fehlgeschlagen');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showCopied(btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '✓';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.classList.remove('copied');
+            }, 1500);
         }
     </script>
 

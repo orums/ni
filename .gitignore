@@ -32,3 +32,4 @@ INPUT*.md
 
 include html files
 !**.html
+!icon/*.png
