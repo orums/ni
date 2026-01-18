@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Caesar-Code Zentrale 1.0</title>
+    <title>Caesar-Code Zentrale</title>
     <style>
         :root {
             --primary-color: #E63946; /* Römisches Rot */
@@ -11,6 +11,21 @@
             --card-bg: #FFFFFF;
             --text-color: #1D3557;
             --gold: #D4AF37;
+            --app-version: "v1.1";
+        }
+
+        .version-badge {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 100;
         }
 
         body {
@@ -198,6 +213,7 @@
 </head>
 <body>
 
+    <div class="version-badge">v1.1</div>
     <div class="header-decoration">🏛️📜🛡️</div>
     <h1>Caesar-Code Zentrale</h1>
     <p class="description">Verschiebe das Alphabet wie der große Feldherr Julius Caesar, um deine Befehle geheim zu halten!</p>
@@ -245,8 +261,8 @@
     <script>
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        // Erlaubte Satzzeichen
-        const allowedPunctuation = " .,!?-:;'\"()";
+        // Erlaubte Satzzeichen (inkl. Newline für mehrzeilige Eingabe)
+        const allowedPunctuation = " .,!?-:;'\"()\n";
 
         // Umwandlung von Umlauten und Akzentbuchstaben für Verschlüsselung
         function cleanTextForEncrypt(text) {

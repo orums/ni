@@ -3,13 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Umkehrcode 1.0</title>
+    <title>Umkehrcode</title>
     <style>
         :root {
             --primary-color: #AF52DE; /* iPad Lila für Unterscheidung */
             --bg-color: #F2F2F7;
             --card-bg: #FFFFFF;
             --text-color: #000000;
+            --app-version: "v1.1";
+        }
+
+        .version-badge {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 100;
         }
 
         body {
@@ -181,6 +196,7 @@
 </head>
 <body>
 
+    <div class="version-badge">v1.1</div>
     <h1>🔄 Umkehrcode: Wort-Spiegel</h1>
     <p class="description">Verwirre deine Gegner, indem du jedes Wort einfach rückwärts schreibst!</p>
 
